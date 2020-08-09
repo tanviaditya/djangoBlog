@@ -3,25 +3,25 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
 
-    initial = True
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('blog', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name='Comment',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(default='default.jpg', upload_to='profile_pics')),
-                ('firstname', models.CharField(default='First name', max_length=10)),
-                ('lastname', models.CharField(default='Last name', max_length=10)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('text', models.TextField()),
+                ('comment_date', models.DateTimeField(default=django.utils.timezone.now)),
+                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='blog.Post')),
             ],
         ),
     ]

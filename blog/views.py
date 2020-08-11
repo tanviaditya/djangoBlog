@@ -1,4 +1,6 @@
 from django.shortcuts import render,get_object_or_404
+from django.urls import reverse
+
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -11,7 +13,7 @@ def home(request):
 	}
 	return render(request,'blog/home.html',context)
 
-class PostComment(CreateView):
+class PostComment(LoginRequiredMixin,CreateView):
 	model = Comment
 	fields=['text']
 	template_name = "blog/post_comment.html"
@@ -21,6 +23,16 @@ class PostComment(CreateView):
 		form.instance.post=get_object_or_404(Post,pk=self.kwargs.get('pk'))		
 		return super().form_valid(form)
 
+class DeleteComment(DeleteView):
+	model = Comment
+	def test_func(self):
+		comment=self.get_object()
+		if self.request.user==comment.author:
+			return True
+	def get_success_url(self):
+		post = Post.objects.get(pk=self.object.post.pk)
+		return post.get_absolute_url()
+	
 
 class PostListView(ListView):
 	model=Post

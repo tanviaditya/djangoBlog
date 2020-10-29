@@ -24,7 +24,15 @@ class Comment(models.Model):
 	def get_absolute_url(self):
 		return reverse('post-detail',kwargs={'pk':self.post.pk})
 
-	
-
 	def __str__(self):
 		return f'Comment number {self.id}'
+
+class Report(models.Model):
+	post=models.ForeignKey(Post, on_delete=models.CASCADE,related_name='report')
+	reason=models.TextField()
+	author=models.ForeignKey(User,on_delete=models.CASCADE)
+	
+	def get_absolute_url(self):
+		return reverse('post-detail',kwargs={'pk':self.post.pk})
+	def __str__(self):
+		return f'Report number {self.id}'

@@ -1,0 +1,17 @@
+{% extends "blog/base.html" %}
+	{% block content %}
+    <h2>Following </h2>
+		{% for conn in connections %}
+			<article class="media content-section">
+				<img
+				class="rounded-circle article-img"
+				src="{{conn.following.profile.image.url}}"
+				/>
+					<div class="media-body">
+						<div class="article-metadata">
+						<a class="mr-2" href="{% url 'user-posts' conn.following.username %}">{{conn.following.profile.firstname}}</a>
+						</div>
+					</div>
+			</article>
+		{% endfor %}
+	{% endblock content%}
